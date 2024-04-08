@@ -1,34 +1,33 @@
 #!/usr/bin/python3
 
-def factorize_number(n):
-    """
-    Factorize a number n into two smaller numbers (p and q).
-    Returns a tuple (p, q).
-    """
-    for p in range(2, int(n**0.5) + 1):
-        if n % p == 0:
-            q = n // p
-            return p, q
-    # If no factors found, return (n, 1) (prime number)
-    return n, 1
+from sys import argv
 
-def main(filename):
+def factorize(number_to_check):
+    """Find two small numbers that multiply to give a given number."""
+    i = 2
+
+    if number_to_check < 2:
+        return
+    
+    while number_to_check % i:
+        i += 1
+    print("{:.0f} = {:.0f} * {:.0f}".format(number_to_check, number_to_check / i, i))
+
+def main():
+    if len(argv) != 2:
+        print("Usage: python script.py <filename>")
+        exit()
+
     try:
-        with open(filename, 'r') as file:
+        with open(argv[1]) as file:
             for line in file:
-                try:
-                    number = int(line.strip())
-                    p, q = factorize_number(number)
-                    print(f"{number} = {p} * {q}")
-                except ValueError:
-                    print(f"Invalid number in the file: {line.strip()}")
+                number_to_check = int(line.strip())
+                factorize(number_to_check)
     except FileNotFoundError:
-        print(f"File '{filename}' not found.")
+        print(f"File '{argv[1]}' not found.")
+    except ValueError:
+        print("Invalid input in the file. Please provide valid integers.")
 
 if __name__ == "__main__":
-    import sys
-    if len(sys.argv) != 2:
-        print("Usage: python factors.py <file>")
-        sys.exit(1)
-    filename = sys.argv[1]
-    main(filename)
+    main()
+
